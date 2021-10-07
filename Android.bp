@@ -116,6 +116,7 @@ cc_defaults {
     cflags: [
         "-UADB_HOST",
         "-DADB_HOST=0",
+        "-DLEGACY_FFS=1",
     ],
 
     shared_libs: [
@@ -229,6 +230,7 @@ libadb_srcs = [
     "sysdeps/errno.cpp",
     "transport.cpp",
     "transport_fd.cpp",
+    "transport_legacy.cpp",
     "types.cpp",
 ]
 
@@ -614,6 +616,7 @@ cc_library_static {
                 "daemon/property_monitor.cpp",
                 "daemon/usb.cpp",
                 "daemon/usb_ffs.cpp",
+                "daemon/usb_legacy.cpp",
                 "daemon/watchdog.cpp",
             ],
             shared_libs: [
@@ -622,6 +625,11 @@ cc_library_static {
             static_libs: [
                  "android_adbdauth_flags_cc_lib",
             ],
+        },
+        linux_glibc: {
+            srcs: [
+                "daemon/usb_dummy.cpp",
+             ]
         },
         recovery: {
             exclude_shared_libs: [
