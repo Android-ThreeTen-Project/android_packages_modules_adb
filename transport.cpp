@@ -1616,6 +1616,7 @@ void unregister_usb_transport(usb_handle* usb) {
 }
 #endif
 
+#if ADB_HOST
 // Track reverse:forward commands, so that info can be used to develop
 // an 'allow-list':
 //   - adb reverse tcp:<device_port> localhost:<host_port> : responds with the
