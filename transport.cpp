@@ -725,13 +725,15 @@ void update_transports() {
 
 #endif  // ADB_HOST
 
-#if ADB_HOST
 static bool usb_devices_start_detached() {
+#if ADB_HOST
     static const char* env = getenv("ADB_LIBUSB_START_DETACHED");
     static bool result = env && strcmp("1", env) == 0;
     return should_use_libusb() && result;
-}
+#else
+    return false;
 #endif
+}
 
 static void fdevent_unregister_transport(atransport* t) {
     D("transport: %s deleting", t->serial.c_str());
@@ -751,12 +753,7 @@ static void fdevent_register_transport(atransport* t) {
     if (t->GetConnectionState() != kCsNoPerm) {
         t->connection()->SetTransport(t);
 
-        if (t->type == kTransportUsb
-#if ADB_HOST
-            && usb_devices_start_detached()  // -d setting propagated from the
-                                             // host device, hence n/a on-device.
-#endif
-        ) {
+        if (t->type == kTransportUsb && usb_devices_start_detached()) {
             t->SetConnectionState(kCsDetached);
         } else {
             t->connection()->Start();
